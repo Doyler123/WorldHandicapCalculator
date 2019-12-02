@@ -6,5 +6,6 @@ export default {
     SSS: "sss",
     SLOPE: "slope",
     DEFAULT_SLOPE: 125,
-    SLOPE_DIVISOR: 113
+    SLOPE_DIVISOR: 113,
+    SESSION_STORAGE_KEY: "handicapdata"
 }

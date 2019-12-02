@@ -11,7 +11,7 @@ export default function HandicapInfo(props) {
   const classes = useStyles();
 
   return (
-        <Grid item xs={12}>
+        <Grid item xs={12} lg={6}>
           <InputFields />
         </Grid>
   );
