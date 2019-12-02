@@ -31,7 +31,7 @@ const ErrorHandleFormControl = (props) =>{
   
   export const ErrorHandleTextField = (props) => {
   
-    let {formState, text, name, label, validate, className, fullWidth, required, variant} = props
+    let {formState, text, name, label, validate, className, fullWidth, required, variant, endAdornment, margin } = props
 
     let error = formState.validity[name] !== undefined && !formState.validity[name]
 
@@ -44,12 +44,14 @@ const ErrorHandleFormControl = (props) =>{
                 validate: validate
               }),
               id: name, 
-              name :name}}
+              name :name,
+              endAdornment: endAdornment}}
             className={className}  
             fullWidth={fullWidth}
             required={required}
             error={error}
             label={label}
+            margin={margin}
             variant={variant}
             helperText={formState.errors[name]}
             FormHelperTextProps={{

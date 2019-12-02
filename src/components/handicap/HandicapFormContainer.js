@@ -1,11 +1,11 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import InputFields from './HandicapForm'
 import Constants from '../../constants'
 import * as util from '../../util/handicapUtil';
 import createPersistedState from 'use-persisted-state';
 import { useFormState } from 'react-use-form-state';
 import HandicapForm from './HandicapForm'
+import Typography from '@material-ui/core/Typography';
 
 
 const useStoredDataState = createPersistedState(Constants.SESSION_STORAGE_KEY, global.sessionStorage);

@@ -5,6 +5,11 @@ import {ErrorHandleTextField} from '../widgets/forms/CustomFormInputs'
 import Constants from '../../constants'
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import InfoDialog from './InfoDialog'
+import Definitions from './definitions'
 
 
 const useStyles = makeStyles(theme => ({
@@ -13,6 +18,7 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap',
   },
   textField: {
+    maxWidth: "210px",
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     marginTop: theme.spacing(1),
@@ -23,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ScoreFields = ({roundNumber, formState, inputs, classes, validateField}) => {
+const ScoreFields = ({roundNumber, formState, inputs, classes, validateField, onclickInfoButton, InfoButton}) => {
     
     return (
         <Grid item sm={12} >
@@ -37,6 +43,7 @@ const ScoreFields = ({roundNumber, formState, inputs, classes, validateField}) =
                 validate={(value) => validateField(value)}
                 className={classes.textField}
                 variant="outlined"
+                margin={"dense"}
             />
 
             <ErrorHandleTextField
@@ -49,65 +56,116 @@ const ScoreFields = ({roundNumber, formState, inputs, classes, validateField}) =
                 validate={(value) => validateField(value)}
                 className={classes.textField}
                 variant="outlined"
+                endAdornment={<InfoButton type={Constants.CSS}/>}
+                margin={"dense"}
             />
         </Grid>
     )
 }
 
-export default function InputFields({formState, inputs, validateField, onClickCalculate}) {
+
+
+export default function HandicapForm({formState, inputs, validateField, onClickCalculate}) {
 
   const classes = useStyles();
 
-  return (
-    <form className={classes.container} autoComplete={false}>
-      <Grid container >
-      <Grid item sm={12} >
-        <ErrorHandleTextField
-                formState={formState}
-                text={inputs.text}
-                name={Constants.SSS}
-                label={`CR or SSS`}
-                fullWidth={false}
-                required={true}
-                validate={(value) => validateField(value)}
-                className={classes.textField}
-                variant="outlined"
-            />
+  const [open, setOpen] = useState(false);
 
-            <ErrorHandleTextField
-                formState={formState}
-                text={inputs.text}
-                name={Constants.SLOPE}
-                label={`Slope`}
-                fullWidth={false}
-                required={false}
-                validate={(value) => validateField(value)}
-                className={classes.textField}
-                variant="outlined"
-            />  
-      </Grid>
-      <Grid item sm={12} >
-        <Divider style={{marginTop : '10px'}} component={'div'} variant={"middle"}/> 
-      </Grid>
-        {Object.keys(formState.values).filter( value => value.startsWith(Constants.GROSS)).map( (key, index) => (
-            <ScoreFields 
-              roundNumber={index + 1} 
-              formState={formState} 
-              inputs={inputs} 
-              classes={classes} 
-              validateField={validateField}/>
-        ))}
-      </Grid>
-      <Grid item sm={12} >
-        <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {console.log(onClickCalculate(formState.values))}}
-            className={classes.button}
-            >
-                {"Calculate"}
-        </Button> 
-      </Grid>
-    </form>
+  const [dialogInfo, setDialogInfo] = useState({
+    title: "",
+    info: ""
+  })
+
+  const InfoButton = ({type}) => {
+    return(
+      <InputAdornment position="end">
+        <IconButton
+          aria-label="show field info"
+          onClick={() => onclickInfoButton(type)}
+        >
+          <InfoOutlinedIcon />
+        </IconButton>
+      </InputAdornment>
+    )
+  }
+  
+  const onclickInfoButton = (type) => {
+    switch(type){
+      case Constants.SSS:
+        setDialogInfo({ title: "CR or SSS", info: Definitions[Constants.SSS]})
+        break;
+      case Constants.SLOPE:
+        setDialogInfo({ title: "Slope", info: Definitions[Constants.SLOPE]})
+        break;
+      case Constants.CSS:
+        setDialogInfo({ title: "CSS", info: Definitions[Constants.CSS]})
+        break;
+        
+    }
+    setOpen(true)
+  }
+
+
+  return (
+    <React.Fragment>
+      <InfoDialog open={open} setOpen={setOpen} dialogInfo={dialogInfo}/>
+      <form className={classes.container} autoComplete={false}>
+        <Grid container >
+        <Grid item sm={12} >
+          <ErrorHandleTextField
+                  formState={formState}
+                  text={inputs.text}
+                  name={Constants.SSS}
+                  label={`CR or SSS`}
+                  fullWidth={false}
+                  required={true}
+                  validate={(value) => validateField(value)}
+                  className={classes.textField}
+                  variant="outlined"
+                  margin={"dense"}
+                  endAdornment={<InfoButton type={Constants.SSS}/>}
+              />
+
+              <ErrorHandleTextField
+                  formState={formState}
+                  text={inputs.text}
+                  name={Constants.SLOPE}
+                  label={`Slope`}
+                  fullWidth={false}
+                  required={false}
+                  validate={(value) => validateField(value)}
+                  className={classes.textField}
+                  variant="outlined"
+                  margin={"dense"}
+                  endAdornment={<InfoButton type={Constants.SLOPE}/>}
+              />  
+        </Grid>
+        <Grid item sm={12} >
+          <Divider style={{marginTop : '10px'}} component={'div'} variant={"middle"}/> 
+        </Grid>
+          {Object.keys(formState.values).filter( value => value.startsWith(Constants.GROSS)).map( (key, index) => (
+              <ScoreFields 
+                roundNumber={index + 1} 
+                formState={formState} 
+                inputs={inputs} 
+                classes={classes} 
+                validateField={validateField}
+                onclickInfoButton={onclickInfoButton}
+                InfoButton={InfoButton}
+                />
+          ))}
+        </Grid>
+        <Grid item sm={12} >
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {console.log(onClickCalculate(formState.values))}}
+              className={classes.button}
+              >
+                  {"Calculate"}
+          </Button> 
+        </Grid>
+      </form>
+    </React.Fragment>
   );
 }
