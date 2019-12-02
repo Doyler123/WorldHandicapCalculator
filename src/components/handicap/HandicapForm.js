@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { useFormState } from 'react-use-form-state';
 import {ErrorHandleTextField} from '../widgets/forms/CustomFormInputs'
 import Constants from '../../constants'
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import * as util from '../../util/handicapUtil';
-import createPersistedState from 'use-persisted-state';
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,35 +17,13 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginTop: theme.spacing(1),
   },
-  dense: {
-    marginTop: theme.spacing(2),
-  },
-  menu: {
-    width: 200,
-  },
   button: {
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   },
 }));
 
-const useStoredDataState = createPersistedState(Constants.SESSION_STORAGE_KEY, global.sessionStorage);
-
-const calculate = (values) => {
-    return util.calculateHandicap(values)
-}
-
-const validateField = (value, values, setStoredData,) => {
-    if(isNaN(value)){
-        return "Not a number"
-    }
-
-    setStoredData({...values})
-
-    return true
-}
-
-const ScoreFields = ({roundNumber, formState, inputs, classes, setStoredData}) => {
+const ScoreFields = ({roundNumber, formState, inputs, classes, validateField}) => {
     
     return (
         <Grid item sm={12} >
@@ -59,7 +34,7 @@ const ScoreFields = ({roundNumber, formState, inputs, classes, setStoredData}) =
                 label={`Round ${roundNumber} Gross`}
                 fullWidth={false}
                 required={false}
-                validate={(value) => validateField(value, formState.values, setStoredData)}
+                validate={(value) => validateField(value)}
                 className={classes.textField}
                 variant="outlined"
             />
@@ -71,7 +46,7 @@ const ScoreFields = ({roundNumber, formState, inputs, classes, setStoredData}) =
                 label={`CSS`}
                 fullWidth={false}
                 required={false}
-                validate={(value) => validateField(value, formState.values, setStoredData)}
+                validate={(value) => validateField(value)}
                 className={classes.textField}
                 variant="outlined"
             />
@@ -79,31 +54,9 @@ const ScoreFields = ({roundNumber, formState, inputs, classes, setStoredData}) =
     )
 }
 
-const getInitialState = (storedData) => {
+export default function InputFields({formState, inputs, validateField, onClickCalculate}) {
 
-    if(!Object.keys(storedData).length > 0){
-        var newState = {}
-    
-        var numRounds = Constants.NUM_ROUNDS;
-    
-        for(var i=1; i <= numRounds; i++){
-            newState[Constants.GROSS + i] = ""
-            newState[Constants.CSS + i]   = ""
-        }
-        return newState
-    }
-
-    return storedData
-
-}
-
-export default function InputFields() {
-
-  const [ storedData, setStoredData ] = useStoredDataState({})
-    
   const classes = useStyles();
-
-  const [formState, inputs] = useFormState(getInitialState(storedData));
 
   return (
     <form className={classes.container} autoComplete={false}>
@@ -116,7 +69,7 @@ export default function InputFields() {
                 label={`CR or SSS`}
                 fullWidth={false}
                 required={true}
-                validate={(value) => validateField(value, formState.values, setStoredData)}
+                validate={(value) => validateField(value)}
                 className={classes.textField}
                 variant="outlined"
             />
@@ -128,7 +81,7 @@ export default function InputFields() {
                 label={`Slope`}
                 fullWidth={false}
                 required={false}
-                validate={(value) => validateField(value, formState.values, setStoredData)}
+                validate={(value) => validateField(value)}
                 className={classes.textField}
                 variant="outlined"
             />  
@@ -137,14 +90,19 @@ export default function InputFields() {
         <Divider style={{marginTop : '10px'}} component={'div'} variant={"middle"}/> 
       </Grid>
         {Object.keys(formState.values).filter( value => value.startsWith(Constants.GROSS)).map( (key, index) => (
-            <ScoreFields roundNumber={index + 1} formState={formState} inputs={inputs} classes={classes} setStoredData={setStoredData}/>
+            <ScoreFields 
+              roundNumber={index + 1} 
+              formState={formState} 
+              inputs={inputs} 
+              classes={classes} 
+              validateField={validateField}/>
         ))}
       </Grid>
       <Grid item sm={12} >
         <Button
             variant="contained"
             color="primary"
-            onClick={() => {console.log(calculate(formState.values))}}
+            onClick={() => {console.log(onClickCalculate(formState.values))}}
             className={classes.button}
             >
                 {"Calculate"}

@@ -1,14 +1,14 @@
 import React from 'react';
 import './App.css';
 import Layout from './components/layout/Layout'
-import HandicapInfo from './components/handicap/HandicapInfo'
+import HandicapForm from './components/handicap/HandicapFormContainer'
 
 
 function App() {
   return (
     <div className="App">
       <Layout>
-        <HandicapInfo />
+        <HandicapForm />
       </Layout>
     </div>
   );
