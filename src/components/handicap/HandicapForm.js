@@ -3,14 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {ErrorHandleTextField} from '../widgets/forms/CustomFormInputs'
 import Constants from '../../constants'
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import InfoDialog from './InfoDialog'
-import Definitions from './definitions'
-
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -65,16 +61,9 @@ const ScoreFields = ({roundNumber, formState, inputs, classes, validateField, on
 
 
 
-export default function HandicapForm({formState, inputs, validateField, onClickCalculate}) {
+export default function HandicapForm({formState, inputs, validateField, onClickCalculate, onclickInfoButton}) {
 
   const classes = useStyles();
-
-  const [open, setOpen] = useState(false);
-
-  const [dialogInfo, setDialogInfo] = useState({
-    title: "",
-    info: ""
-  })
 
   const InfoButton = ({type}) => {
     return(
@@ -88,27 +77,10 @@ export default function HandicapForm({formState, inputs, validateField, onClickC
       </InputAdornment>
     )
   }
-  
-  const onclickInfoButton = (type) => {
-    switch(type){
-      case Constants.SSS:
-        setDialogInfo({ title: "CR or SSS", info: Definitions[Constants.SSS]})
-        break;
-      case Constants.SLOPE:
-        setDialogInfo({ title: "Slope", info: Definitions[Constants.SLOPE]})
-        break;
-      case Constants.CSS:
-        setDialogInfo({ title: "CSS", info: Definitions[Constants.CSS]})
-        break;
-        
-    }
-    setOpen(true)
-  }
 
 
   return (
     <React.Fragment>
-      <InfoDialog open={open} setOpen={setOpen} dialogInfo={dialogInfo}/>
       <form className={classes.container} autoComplete={false}>
         <Grid container >
         <Grid item sm={12} >
@@ -141,7 +113,7 @@ export default function HandicapForm({formState, inputs, validateField, onClickC
               />  
         </Grid>
         <Grid item sm={12} >
-          <Divider style={{marginTop : '10px'}} component={'div'} variant={"middle"}/> 
+          {/* <Divider style={{marginTop : '10px'}} component={'div'} variant={"middle"}/>  */}
         </Grid>
           {Object.keys(formState.values).filter( value => value.startsWith(Constants.GROSS)).map( (key, index) => (
               <ScoreFields 

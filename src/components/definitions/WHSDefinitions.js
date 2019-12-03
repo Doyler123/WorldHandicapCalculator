@@ -60,38 +60,7 @@ export default function SimpleExpansionPanel() {
 
   return (
     <Grid item xs={12} lg={6}>
-        <ExpansionPanel defaultExpanded>
-            <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel2a-content"
-                id="panel2a-header"
-            >
-            <Typography className={classes.heading}>Transition Table</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                <Table className={classes.table} size="small" aria-label="a dense table">
-                    <TableHead>
-                        <TableRow>
-                        <TableCell align="center">No of differentials in scoring record </TableCell>
-                        <TableCell align="center">Differentials to be used in calculation</TableCell>
-                        <TableCell align="center">Adjustment</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map(row => (
-                        <TableRow key={row.name}>
-                            <TableCell align="center" component="th" scope="row">
-                            {row.numDiffs}
-                            </TableCell>
-                            <TableCell align="center">{row.diffsInCalc}</TableCell>
-                            <TableCell align="center">{row.adjustment}</TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
-      <ExpansionPanel>
+      <ExpansionPanel defaultExpanded>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -143,6 +112,37 @@ export default function SimpleExpansionPanel() {
             </Box>
         </ExpansionPanelDetails>
       </ExpansionPanel>
+      <ExpansionPanel>
+            <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+            >
+            <Typography className={classes.heading}>Transition Table</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <Table className={classes.table} size="small" aria-label="a dense table">
+                    <TableHead>
+                        <TableRow>
+                        <TableCell align="center">No of differentials in scoring record </TableCell>
+                        <TableCell align="center">Differentials to be used in calculation</TableCell>
+                        <TableCell align="center">Adjustment</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map(row => (
+                        <TableRow key={row.name}>
+                            <TableCell align="center" component="th" scope="row">
+                            {row.numDiffs}
+                            </TableCell>
+                            <TableCell align="center">{row.diffsInCalc}</TableCell>
+                            <TableCell align="center">{row.adjustment}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
     </Grid>
   );
 }
