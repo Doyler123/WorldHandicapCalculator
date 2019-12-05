@@ -6,6 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import Constants from '../../constants'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,9 +29,12 @@ export default function InfoDialog({open, setOpen, dialogInfo}) {
       >
         <DialogTitle id="alert-dialog-slide-title">{dialogInfo.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
+          {dialogInfo.type !== Constants.RESULT ? <DialogContentText id="alert-dialog-slide-description">
             {dialogInfo.info}
-          </DialogContentText>
+          </DialogContentText> 
+          : <DialogContentText id="alert-dialog-slide-description" variant="h4" align="center" >
+            {dialogInfo.info}
+          </DialogContentText>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

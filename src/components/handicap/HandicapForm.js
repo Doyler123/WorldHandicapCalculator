@@ -69,6 +69,7 @@ export default function HandicapForm({formState, inputs, validateField, onClickC
     return(
       <InputAdornment position="end">
         <IconButton
+          style={{color: '#B2B2B2'}}
           aria-label="show field info"
           onClick={() => onclickInfoButton(type)}
         >
@@ -131,7 +132,7 @@ export default function HandicapForm({formState, inputs, validateField, onClickC
           <Button
               variant="contained"
               color="primary"
-              onClick={() => {console.log(onClickCalculate(formState.values))}}
+              onClick={(event) => {onClickCalculate(event, formState.values)}}
               className={classes.button}
               >
                   {"Calculate"}

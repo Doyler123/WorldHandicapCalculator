@@ -43,6 +43,8 @@ export default function Layout(props) {
         <AppBar>
           <Toolbar>
             <Typography variant="h6">World Handicap Calculator</Typography>
+            <Typography className={classes.root} variant="h6"></Typography>
+            {props.whsHandicap ? <Typography variant="subtitle1">{"WHS Handicap: " + props.whsHandicap}</Typography> : null}
           </Toolbar>
         </AppBar>
       </ElevationScroll>

@@ -51,13 +51,6 @@ export default function SimpleExpansionPanel() {
 
   const classes = useStyles();
 
-  const calculationList = [
-      "The Course Rating (CR) or SSS",
-      "The Slope Rating of the tees played",
-      "The adjusted Gross Score",
-      "Any CSS adjustments",
-  ]
-
   return (
     <Grid item xs={12} lg={6}>
       <ExpansionPanel defaultExpanded>
@@ -73,43 +66,16 @@ export default function SimpleExpansionPanel() {
             <Typography variant="body1" gutterBottom>
                 In order to transition from CONGU to WHS handicaps, all players' current handicap records 
                 will be reprocessed using the WHS principles. The calculation will identify the best 8 of 
-                the last 20 Score Differentials and factor in:
-                <List dense={true}>
-                    {calculationList.map(text =>(
-                        <ListItem>
-                            <ListItemIcon>
-                                <ArrowRightIcon />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={text}
-                            />
-                        </ListItem>
-                    ))}
-                </List>
+                the last 20 Gross Scores. The Gross Scores will be transformed into score differentials using 
+                the following formula: <br></br><br></br>
+
+                Score Differential = 113/slope * (adjusted gross score - CR - CSS) <br></br><br></br>
+
+                Once the score differentials are calulated the average of the best 8 will determine your WHS Handicap.
+                If you do not have 20 previous gross scores, your WHS handicap will be calculated based off the transition
+                table below.
             </Typography>
           </Box>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-        >
-          <Typography className={classes.heading}>Score Differential</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-            <Box textAlign="left" m={1}>
-                <Typography variant="body1" gutterBottom>
-                    A Score Differential is computed from four elements: Adjusted Gross Score, USGA Course Rating, Slope Rating,
-                    and 113 (the Slope Rating of a course of standard difficulty). To determine the Differential, subtract the USGA
-                    Course Rating from the adjusted gross score; multiply the difference by 113; and divide the resulting number
-                    by the Slope Rating. Round the final number to the nearest tenth ( one decimal). <br></br><br></br>
-
-                    Score Differential = 113/slope * (adjusted gross score - CR - CSS)
-
-                </Typography>
-            </Box>
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel>
@@ -124,8 +90,8 @@ export default function SimpleExpansionPanel() {
                 <Table className={classes.table} size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>
-                        <TableCell align="center">No of differentials in scoring record </TableCell>
-                        <TableCell align="center">Differentials to be used in calculation</TableCell>
+                        <TableCell align="center">Noumber of Rounds</TableCell>
+                        <TableCell align="center">Rounds used in calculation</TableCell>
                         <TableCell align="center">Adjustment</TableCell>
                         </TableRow>
                     </TableHead>

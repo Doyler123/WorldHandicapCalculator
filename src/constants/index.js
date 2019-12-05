@@ -7,5 +7,6 @@ export default {
     SLOPE: "slope",
     DEFAULT_SLOPE: 125,
     SLOPE_DIVISOR: 113,
-    SESSION_STORAGE_KEY: "handicapdata"
+    SESSION_STORAGE_KEY: "handicapdata",
+    RESULT: "result"
 }

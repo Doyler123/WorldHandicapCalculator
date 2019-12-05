@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Constants from '../../constants'
 import * as util from '../../util/handicapUtil';
-import createPersistedState from 'use-persisted-state';
 import { useFormState } from 'react-use-form-state';
 import HandicapForm from './HandicapForm'
-import Definitions from '../definitions/definitions'
+import Definitions from '../../constants/definitions'
 import InfoDialog from './InfoDialog'
-
-
-
-const useStoredDataState = createPersistedState(Constants.SESSION_STORAGE_KEY, global.sessionStorage);
 
 const getInitialState = (storedData) => {
 
@@ -30,42 +25,64 @@ const getInitialState = (storedData) => {
 
 }
 
-export default function HandicapInfo(props) {
-  
-  const [ storedData, setStoredData ] = useStoredDataState({})
+const scrollToTop = event => {
+  const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor');
 
+  if (anchor) {
+    anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+};
+
+export default function HandicapInfo({ whsHandicap, setWHSHandicap, storedData, setStoredData }) {
+  
   const [formState, inputs] = useFormState(getInitialState(storedData));
 
-  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const [dialogInfo, setDialogInfo] = useState({
     title: "",
-    info: ""
+    info: "",
+    type : ""
   })
   
-  const onclickInfoButton = (type) => {
-    switch(type){
-      case Constants.SSS:
-        setDialogInfo({ title: "CR or SSS", info: Definitions[Constants.SSS]})
-        break;
-      case Constants.SLOPE:
-        setDialogInfo({ title: "Slope", info: Definitions[Constants.SLOPE]})
-        break;
-      case Constants.CSS:
-        setDialogInfo({ title: "CSS", info: Definitions[Constants.CSS]})
-        break;
-        
-    }
-    setOpen(true)
+const openDialog = (type) => {
+  switch(type){
+    case Constants.SSS:
+      setDialogInfo({ title: "CR or SSS", info: Definitions[Constants.SSS], type: type})
+      break;
+    case Constants.SLOPE:
+      setDialogInfo({ title: "Slope", info: Definitions[Constants.SLOPE], type: type})
+      break;
+    case Constants.CSS:
+      setDialogInfo({ title: "CSS", info: Definitions[Constants.CSS], type: type})
+      break;
+    case Constants.RESULT:
+      setDialogInfo({title: "WHS Handicap", info: whsHandicap, type: type})
+      break;
+      
   }
+  setDialogOpen(true)
+}
 
-  const onClickCalculate = (values) => {
-    if(validateForm()){
-      return util.calculateHandicap(values)
+const onClickCalculate = (event, values) => {
+  if(validateForm()){
+    setWHSHandicap(util.round(util.calculateHandicap(values), 1))
+    if(whsHandicap){
+      scrollToTop(event)
+      openDialog(Constants.RESULT)
+      setStoredData({...storedData, whsHandicap: whsHandicap})
     }
-
-    return 0
+  }else{
+    scrollToTop(event)
   }
+}
+
+useEffect(()=>{
+  if(whsHandicap && storedData.whsHandicap !== whsHandicap){
+    openDialog(Constants.RESULT)
+    setStoredData({...storedData, whsHandicap: whsHandicap})
+  }
+}, [whsHandicap])
 
 const validateForm = () => {
 
@@ -124,20 +141,21 @@ const validateField = (value) => {
         return "Not a number"
     }
 
-    setStoredData({...formState.values})
+    setStoredData({...storedData, ...formState.values})
 
     return true
 }
 
   return (
         <Grid item xs={12} lg={6}>
-          <InfoDialog open={open} setOpen={setOpen} dialogInfo={dialogInfo}/>
+          <div id="back-to-top-anchor"></div>
+          <InfoDialog open={dialogOpen} setOpen={setDialogOpen} dialogInfo={dialogInfo}/>
           <HandicapForm 
             formState={formState}
             inputs={inputs}
             validateField={validateField}
             onClickCalculate={onClickCalculate}
-            onclickInfoButton={onclickInfoButton}
+            onclickInfoButton={openDialog}
           />
         </Grid>
   );
