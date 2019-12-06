@@ -39,6 +39,8 @@ export default function HandicapInfo({ whsHandicap, setWHSHandicap, storedData, 
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const [errors, setErrors] = useState([])
+
   const [dialogInfo, setDialogInfo] = useState({
     title: "",
     info: "",
@@ -88,50 +90,61 @@ const validateForm = () => {
 
   let calculate = true
 
-  Object.keys(formState.values).forEach(key => {
-    let fieldValue = formState.values[key]
+  let errorMessages = []
 
-    if(key === Constants.SSS){
-      if(!fieldValue){
-        formState.setFieldError(key, "*Required")
-        calculate = false
-      }
-    }
-
-    if(key === Constants.SLOPE){
-      if(fieldValue){
-        if(isNaN(fieldValue)){
-          formState.setFieldError(key, "Not a number")
-          calculate = false
-        }else if(fieldValue < 55 || fieldValue > 155){
-          formState.setFieldError(key, "Must be between 55 - 155")
+  if(Object.keys(formState.values).filter(key => key.startsWith(Constants.GROSS) && formState.values[key] !== "").length < 3){
+    errorMessages.push("*Minimun of 3 rounds required.")
+    calculate = false
+  }else{  
+    Object.keys(formState.values).forEach(key => {
+      let fieldValue = formState.values[key]
+  
+      if(key === Constants.SSS){
+        if(!fieldValue){
+          formState.setFieldError(key, "*Required")
           calculate = false
         }
       }
-    }
-
-    if(key.startsWith(Constants.GROSS)){
-      if(isNaN(fieldValue)){
-        formState.setFieldError(key, "Not a number")
-        calculate = false
+  
+      if(key === Constants.SLOPE){
+        if(fieldValue){
+          if(isNaN(fieldValue)){
+            formState.setFieldError(key, "Not a number")
+            calculate = false
+          }else if(fieldValue < 55 || fieldValue > 155){
+            formState.setFieldError(key, "Must be between 55 - 155")
+            errorMessages.push("*Slope must be between 55 and 155.")
+            calculate = false
+          }
+        }
       }
-    }
-
-    if(key.startsWith(Constants.CSS)){
-
-      let sss = formState.values[Constants.SSS]
-      if(fieldValue){
+  
+      if(key.startsWith(Constants.GROSS)){
         if(isNaN(fieldValue)){
           formState.setFieldError(key, "Not a number")
           calculate = false
-        }else if(sss && (fieldValue < sss - 1 || fieldValue > sss + 3) ){
-          formState.setFieldError(key, "SSS -1/+3")
-          calculate = false
         }
       }
-    }
+  
+      if(key.startsWith(Constants.CSS)){
+  
+        let sss = formState.values[Constants.SSS]
+        if(fieldValue){
+          if(isNaN(fieldValue)){
+            formState.setFieldError(key, "Not a number")
+            calculate = false
+          }else if(sss && (fieldValue < sss - 1 || fieldValue > sss + 3) ){
+            formState.setFieldError(key, "SSS -1/+3")
+            errorMessages.push("*CSS must equal the SSS -1/+3.")
+            calculate = false
+          }
+        }
+      }
+  
+    })
+  }
 
-  })
+  setErrors(errorMessages)
 
   return calculate
 }
@@ -156,6 +169,7 @@ const validateField = (value) => {
             validateField={validateField}
             onClickCalculate={onClickCalculate}
             onclickInfoButton={openDialog}
+            errors={errors}
           />
         </Grid>
   );

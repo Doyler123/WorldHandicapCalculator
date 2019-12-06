@@ -10,5 +10,7 @@ export default {
         of 125 will be used for calculation purposes`,
     css: `The Competition Standard Scratch (CSS) is a calculation made on any given day depending solely on 
         the scores of the players taking part and is an indication of how diffucult the course played. CSS can range from 1 lower than SSS to 3
-        higher. If no CSS is provided for a round it will default to the course SSS`
+        higher. If no CSS is provided for a round it will default to the course SSS`,
+    note: `Please note these calculations are based off various WHS documentation and are not 100% accurate. The purpose of this 
+        calculator is to give an indication of what your new World Handicap System (WHS) handicap will be when it is moved over to the new system.`
 }

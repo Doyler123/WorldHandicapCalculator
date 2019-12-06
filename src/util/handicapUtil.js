@@ -2,9 +2,24 @@ import Constants from '../constants'
 
 export const calculateHandicap = (values) => {
     let hds = getHandicapDifferentials(values)
+    return calculateHandicapFromDifferentials(hds)
+}
+
+export const getHandicapDifferentials = (values) => {
+    return Object.keys(values)
+    .filter( value => value.startsWith(Constants.GROSS) && values[value] !== "")
+    .map( key => {
+        return calculateHandicapDifferential(values[key], values[key.replace(Constants.GROSS, Constants.CSS)], values[Constants.SLOPE], values[Constants.SSS])
+    })
+}
+
+export const calculateHandicapDifferential = (gross, css, slope, sss) => {
+    return round((Constants.SLOPE_DIVISOR / (slope || Constants.DEFAULT_SLOPE)) * (gross - sss - (css ? (css - sss) : Constants.DEFAULT_CSS)), 1)
+}
+
+export const calculateHandicapFromDifferentials = (hds) => {
+    hds.sort(sort)
     let numRounds = hds.length
-    hds.sort((a, b) => a - b)
-    
     if(numRounds >= 3){
         if(numRounds === 3){
             return hds[0] - 2
@@ -34,22 +49,6 @@ export const calculateHandicap = (values) => {
     }
 }
 
-export const getHandicapDifferentials = (values) => {
-    return Object.keys(values)
-    .filter( value => value.startsWith(Constants.GROSS) && values[value] !== "")
-    .map( key => {
-        return calculateHandicapDifferential(key, values)
-    })
-}
-
-export const calculateHandicapDifferential = (key, values) => {
-    let gross   = values[key] 
-        let css     = values[key.replace(Constants.GROSS, Constants.CSS)] || Constants.DEFAULT_CSS
-        let slope   = values[Constants.SLOPE] || Constants.DEFAULT_SLOPE
-        let sss     = values[Constants.SSS]
-        return (Constants.SLOPE_DIVISOR / slope) * (gross - sss - css)
-}
-
 export const average = (values) => {
     if(values.length){
         return values.reduce((a, b) => a + b) / values.length
@@ -61,3 +60,5 @@ export function round(value, precision) {
     var multiplier = Math.pow(10, precision || 0);
     return Math.round(value * multiplier) / multiplier;
 }
+
+export const sort = (a, b) => a - b

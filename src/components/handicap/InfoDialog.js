@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,6 +7,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Constants from '../../constants'
+import Definitions from '../../constants/definitions'
+import Loading from '../widgets/Loading'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -14,8 +16,23 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function InfoDialog({open, setOpen, dialogInfo}) {
 
+  let [note, setNote] = useState(true)
+  
+  let [loading, setLoading] = useState(false)
+    
   const handleClose = () => {
-    setOpen(false);
+    if(dialogInfo.type === Constants.RESULT && note){
+      setLoading(true)
+      setTimeout(()=>{
+          setLoading(false)
+          setNote(false)
+      }, 1000) 
+    }else{
+        setOpen(false);
+        setTimeout(()=>{
+            setNote(true)
+        }, 500)
+    }
   };
 
   return (
@@ -32,14 +49,17 @@ export default function InfoDialog({open, setOpen, dialogInfo}) {
           {dialogInfo.type !== Constants.RESULT ? <DialogContentText id="alert-dialog-slide-description">
             {dialogInfo.info}
           </DialogContentText> 
-          : <DialogContentText id="alert-dialog-slide-description" variant="h4" align="center" >
+          : !note ? <DialogContentText id="alert-dialog-slide-description" variant="h4" align="center" >  
             {dialogInfo.info}
-          </DialogContentText>}
+          </DialogContentText> 
+          : <DialogContentText id="alert-dialog-slide-description">
+                {!loading ? Definitions[Constants.NOTE] : <Loading />}
+            </DialogContentText>}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          {!loading ? <Button onClick={handleClose} color="primary">
             OK
-          </Button>
+          </Button> : null }
         </DialogActions>
       </Dialog>
   );

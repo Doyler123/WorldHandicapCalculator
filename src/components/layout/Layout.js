@@ -9,11 +9,17 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import GolfCourseIcon from '@material-ui/icons/GolfCourse';
+import logo from '../../assets/img/worldHandicapCalculator2.png'
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
+  icon: {
+    height: theme.mixins.toolbar.minHeight,
+    marginRight: theme.spacing(1)
+  }
 }));
 
 function ElevationScroll(props) {
@@ -42,6 +48,8 @@ export default function Layout(props) {
       <ElevationScroll {...props}>
         <AppBar>
           <Toolbar>
+            {/* <GolfCourseIcon className={classes.icon} fontSize="large"/> */}
+            <img className={classes.icon} src={logo} />
             <Typography variant="h6">World Handicap Calculator</Typography>
             <Typography className={classes.root} variant="h6"></Typography>
             {props.whsHandicap ? <Typography variant="subtitle1">{"WHS Handicap: " + props.whsHandicap}</Typography> : null}

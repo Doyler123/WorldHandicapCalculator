@@ -8,5 +8,6 @@ export default {
     DEFAULT_SLOPE: 125,
     SLOPE_DIVISOR: 113,
     SESSION_STORAGE_KEY: "handicapdata",
-    RESULT: "result"
+    RESULT: "result",
+    NOTE: "note"
 }
