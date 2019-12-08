@@ -19,6 +19,14 @@ const useStyles = makeStyles(theme => ({
   icon: {
     height: theme.mixins.toolbar.minHeight,
     marginRight: theme.spacing(1)
+  },
+  spacer:{
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: '20px',
+    },
+    [theme.breakpoints.up('lg')]: {
+      paddingTop: '0px',
+    }
   }
 }));
 
@@ -57,7 +65,7 @@ export default function Layout(props) {
         </AppBar>
       </ElevationScroll>
       <Toolbar />
-      <Container>
+      <Container className={classes.spacer}>
         <Box my={2}>
         <div className={classes.root}>
           <Grid container spacing={3}>

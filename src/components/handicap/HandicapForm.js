@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginTop: theme.spacing(1),
   },
+  texFieldContainer:{
+    display: 'flex',
+    justifyContent: 'center'
+  },
   button: {
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(1),
@@ -36,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 const ScoreFields = ({roundNumber, formState, inputs, classes, validateField, onclickInfoButton, InfoButton}) => {
     
     return (
-        <Grid item sm={12} >
+        <Grid className={classes.texFieldContainer} item sm={12} >
             <ErrorHandleTextField
                 formState={formState}
                 text={inputs.text}
@@ -91,14 +95,15 @@ export default function HandicapForm({formState, inputs, validateField, onClickC
     <React.Fragment>
       <form className={classes.container} autoComplete={false}>
         <Grid container >
-        {errors.length > 0 ? <Grid item sm={12} >
+        {errors.length > 0 ? 
+        <Grid style={{width: '100%'}} className={classes.texFieldContainer} item sm={12} >
           <Box className={classes.errorText}>
             {errors.map( error => 
               <Typography>{error}</Typography> 
             )}
           </Box>
         </Grid> : null}
-        <Grid item sm={12} >
+        <Grid className={classes.texFieldContainer} item sm={12} >
           <ErrorHandleTextField
                   formState={formState}
                   text={inputs.text}
@@ -142,7 +147,7 @@ export default function HandicapForm({formState, inputs, validateField, onClickC
                 />
           ))}
         </Grid>
-        <Grid item sm={12} >
+        <Grid style={{width: '100%'}} className={classes.texFieldContainer} item sm={12} >
           <Button
               variant="contained"
               color="primary"

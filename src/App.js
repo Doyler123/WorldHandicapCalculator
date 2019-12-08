@@ -17,12 +17,12 @@ function App() {
   return (
     <div className="App">
       <Layout whsHandicap={whsHandicap} >
+        <WHSDefinitions />
         <HandicapForm 
           whsHandicap={whsHandicap} 
           setWHSHandicap={setWHSHandicap}
           storedData={storedData}
           setStoredData={setStoredData}/>
-        <WHSDefinitions />
       </Layout>
     </div>
   );

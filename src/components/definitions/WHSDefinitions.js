@@ -21,6 +21,10 @@ const useStyles = makeStyles(theme => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
+  },
+  expansionDetailsTable:{
+      padding: 0,
+      paddingBottom: '24px'
   }
 }));
 
@@ -81,7 +85,7 @@ export default function SimpleExpansionPanel() {
             >
             <Typography className={classes.heading}>Transition Table</Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            <ExpansionPanelDetails className={classes.expansionDetailsTable}>
                 <Table className={classes.table} size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>
