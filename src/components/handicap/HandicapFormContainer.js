@@ -1,3 +1,5 @@
+/*global gtag*/
+
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Constants from '../../constants'
@@ -73,8 +75,22 @@ const onClickCalculate = (event, values) => {
       scrollToTop(event)
       openDialog(Constants.RESULT)
       setStoredData({...storedData, whsHandicap: whsHandicap})
+      if(gtag){
+        gtag('event', 'calculate_success', {
+          'event_category': 'calculate',
+          'event_label': "Result: " + whsHandicap,
+          'value': 1
+        })
+      }
     }
   }else{
+    if(gtag){
+      gtag('event', 'calculate_failed', {
+        'event_category': 'calculate',
+        'event_label': errors.join(', '),
+        'value': 0
+      })
+    }
     scrollToTop(event)
   }
 }
@@ -83,6 +99,13 @@ useEffect(()=>{
   if(whsHandicap && storedData.whsHandicap !== whsHandicap){
     openDialog(Constants.RESULT)
     setStoredData({...storedData, whsHandicap: whsHandicap})
+    if(gtag){
+      gtag('event', 'calculate_success', {
+        'event_category': 'calculate',
+        'event_label': "Result: " + whsHandicap,
+        'value': 1
+      })
+    }
   }
 }, [whsHandicap])
 
