@@ -126,6 +126,9 @@ const validateForm = () => {
         if(!fieldValue){
           formState.setFieldError(key, "*Required")
           calculate = false
+        }else if(isNaN(fieldValue)){
+          formState.setFieldError(key, "*Not a number")
+          calculate = false
         }
       }
   
@@ -151,12 +154,13 @@ const validateForm = () => {
   
       if(key.startsWith(Constants.CSS)){
   
-        let sss = formState.values[Constants.SSS]
+        let sss = !isNaN(formState.values[Constants.SSS]) ? parseInt(formState.values[Constants.SSS]) : formState.values[Constants.SSS]; 
+
         if(fieldValue){
           if(isNaN(fieldValue)){
             formState.setFieldError(key, "Not a number")
             calculate = false
-          }else if(sss && (fieldValue < sss - 1 || fieldValue > sss + 3) ){
+          }else if(sss && (parseInt(fieldValue) < (sss - 1) || parseInt(fieldValue) > (sss + 3)) ){
             formState.setFieldError(key, "SSS -1/+3")
             errorMessages.push("*CSS must equal the SSS -1/+3.")
             calculate = false
